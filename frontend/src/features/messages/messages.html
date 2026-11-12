@@ -1,0 +1,36 @@
+<section class="mx-auto max-w-3xl">
+  <h2 class="mb-4 text-3xl font-semibold text-primary">Messages</h2>
+  @if (error()) {
+    <p role="alert" class="alert alert-error">{{ error() }}</p>
+  } @else if (loading()) {
+    <div class="flex justify-center">
+      <span class="loading loading-spinner loading-md"></span>
+    </div>
+  } @else if (conversations().length === 0) {
+    <p class="text-base-content/70">
+      No conversations yet. Open a member's profile and choose Messages to start one.
+    </p>
+  } @else {
+    <ul class="divide-y divide-base-300 rounded-box bg-base-200">
+      @for (conversation of conversations(); track conversation.memberId) {
+        <li>
+          <a
+            [routerLink]="['/members', conversation.memberId, 'messages']"
+            class="flex items-center gap-4 p-4 hover:bg-base-300"
+          >
+            <img
+              [src]="conversation.imageUrl || '/default-user.png'"
+              [alt]="conversation.displayName"
+              class="size-12 rounded-full object-cover"
+            />
+            <div class="min-w-0 flex-1">
+              <p class="font-semibold">{{ conversation.displayName }}</p>
+              <p class="truncate text-sm text-base-content/70">{{ conversation.lastMessage }}</p>
+            </div>
+            <time class="text-xs text-base-content/60">{{ conversation.sentAt | date: 'short' }}</time>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</section>

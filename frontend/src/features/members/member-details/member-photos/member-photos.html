@@ -1,0 +1,32 @@
+@if (!memberService.editMode()) {
+  @if (photos(); as photos) {
+    @if (photos.length > 0) {
+      <div>
+        <div class="grid grid-cols-4 auto-rows-min gap-3 p-5 h-[65vh] overflow-auto">
+          @for (photo of photos; track photo.id) {
+            <div class="relative">
+              <img [src]="photo.url" alt="No Image Found" class="w-full rounded-lg" />
+              @if (accountService.currentUser()?.id == memberService.member()?.id) {
+                <app-star-button
+                  class="absolute top-1 right-1"
+                  [disabled]="photo.url == memberService.member()?.imageUrl"
+                  [selected]="photo.url == memberService.member()?.imageUrl"
+                  (clickEvent)="setMainPhoto(photo)"
+                ></app-star-button>
+                <app-delete-button
+                  class="absolute right-1 bottom-1"
+                  (clickEvent)="deletePhoto(photo.id)"
+                  [disabled]="photo.url == memberService.member()?.imageUrl"
+                ></app-delete-button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    } @else {
+      <p class="text-center text-gray-500">No photos available.</p>
+    }
+  }
+} @else {
+  <app-photo-upload (uploadFile)="onUploadImage($event)" [loading]="loading()"></app-photo-upload>
+}

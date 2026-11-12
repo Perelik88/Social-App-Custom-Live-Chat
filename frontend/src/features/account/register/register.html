@@ -1,0 +1,96 @@
+<div class="card flex items-center justify-center min-h-[80vh] px-4" style="width: 400px">
+  <div class="card-title justify-center text-3xl text-primary">Sign Up</div>
+  <div class="card-body w-full">
+    <ul class="steps">
+      <li class="step step-primary"></li>
+      <li class="step" [class.step-primary]="steps() === 2">Profile</li>
+    </ul>
+    @if (steps() === 1) {
+      <form
+        [formGroup]="credentialsForm"
+        class="card w-full max-w-sm bg-base-100 shadow-xl overflow-hidden"
+        (ngSubmit)="register()"
+      >
+        <div class="p-6 bg-linear-to-r from-primary to-black text-white text-center">
+          <h2 class="text-xl font-bold">Create your account</h2>
+          <p class="text-sm opacity-80">Join SocialAppDemo today</p>
+        </div>
+
+        <div class="card-body gap-3">
+          <app-text-input
+            label="Display Name"
+            type="text"
+            formControlName="displayName"
+          ></app-text-input>
+          <app-text-input label="Email" type="email" formControlName="email"></app-text-input>
+          <app-text-input
+            label="Password"
+            type="password"
+            formControlName="password"
+          ></app-text-input>
+          <app-text-input
+            label="Confirm Password"
+            type="password"
+            formControlName="confirmPassword"
+          ></app-text-input>
+
+          <div class="card-actions justify-end mt-2">
+            <button type="button" class="btn btn-ghost" (click)="cancel()">Cancel</button>
+            <button
+              type="button"
+              (click)="nextStep()"
+              class="btn btn-primary hover:bg-black"
+              [disabled]="!credentialsForm.valid"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </form>
+    }
+    @if (steps() === 2) {
+      <form
+        [formGroup]="profileForm"
+        class="card w-full max-w-sm bg-base-100 shadow-xl overflow-hidden"
+        (ngSubmit)="register()"
+      >
+        <div class="p-6 bg-linear-to-r from-primary to-black text-white text-center">
+          <h2 class="text-xl font-bold">Profile Information</h2>
+          <p class="text-sm opacity-80">Complete your profile</p>
+        </div>
+
+        <div class="card-body gap-3">
+          <div class="flex items-center gap-4">
+            <label class="cursor-pointer label">
+              <span class="label-text">Gender</span>
+            </label>
+            <select formControlName="gender" class="select select-bordered w-full max-w-xs">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <app-text-input
+            [maxDate]="getMaxDate()"
+            label="Date of Birth"
+            type="date"
+            formControlName="dateOfBirth"
+          ></app-text-input>
+          <app-text-input label="City" type="text" formControlName="city"></app-text-input>
+          <app-text-input label="Country" type="text" formControlName="country"></app-text-input>
+
+          <div class="card-actions justify-end mt-2">
+            <button type="button" class="btn btn-ghost" (click)="previousStep()">Back</button>
+            <button
+              type="submit"
+              class="btn btn-primary hover:bg-black"
+              [disabled]="!profileForm.valid"
+            >
+              Register
+            </button>
+          </div>
+        </div>
+      </form>
+    }
+  </div>
+</div>

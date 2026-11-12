@@ -1,0 +1,27 @@
+<div class="flex items-center w-full gap-3 py-3">
+  <span>Items per page:</span>
+  <select class="select w-24" (change)="onPageChange(undefined, $event.target ?? undefined)">
+    @for (option of pageSizeOptions(); track $index) {
+      <option [value]="option" [selected]="option === pageSize()">{{ option }}</option>
+    }
+  </select>
+  <div class="text-sm">
+    Results {{ (pageNumber() - 1) * pageSize() + 1 }} - {{ lastItemIndex() }} of {{ totalItems() }}
+  </div>
+  <div class="flex items-center gap-2">
+    <button
+      class="btn btn-circle btn-ghost"
+      (click)="onPageChange(pageNumber() - 1)"
+      [disabled]="pageNumber() === 1"
+    >
+      &larr;
+    </button>
+    <button
+      class="btn btn-circle btn-ghost"
+      (click)="onPageChange(pageNumber() + 1)"
+      [disabled]="lastItemIndex() === totalItems()"
+    >
+      &rarr;
+    </button>
+  </div>
+</div>

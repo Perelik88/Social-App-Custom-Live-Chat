@@ -1,0 +1,140 @@
+<header class="p-3 w-full fixed top-0 z-50 bg-linear-to-r from-primary to-black text-white">
+  <nav class="flex justify-between items-center">
+    <div
+      routerLink="/home"
+      routerLinkActive="text-accent"
+      class="text-xl font-bold flex items-center cursor-pointer"
+    >
+      <div class="pr-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="size-6"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z"
+            clip-rule="evenodd"
+          />
+          <path
+            d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z"
+          />
+        </svg>
+      </div>
+      SocialAppDemo
+    </div>
+    @if (busyService.busyCounter() > 0) {
+      <span class="loading loading-spinner text-accent"></span>
+    } @else {
+      @if (accountService.currentUser(); as user) {
+        <ul class="flex space-x-4 uppercase">
+          <li>
+            <a
+              routerLink="/members"
+              routerLinkActive="text-accent"
+              class="hover:underline"
+              [routerLinkActiveOptions]="{ exact: true }"
+              >Matches
+            </a>
+          </li>
+          <li>
+            <a routerLink="/lists" routerLinkActive="text-accent" class="hover:underline">Lists</a>
+          </li>
+          <li>
+            <a routerLink="/messages" routerLinkActive="text-accent" class="hover:underline"
+              >Messages</a
+            >
+          </li>
+          <li>
+            <a routerLink="/errors" routerLinkActive="text-accent" class="hover:underline"
+              >Errors</a
+            >
+          </li>
+        </ul>
+      }
+    }
+    <div class="dropdown mr-5 dropdown-end">
+      <button
+        tabindex="1"
+        class="btn btn-sm border-white bg-transparent text-white hover:border-white hover:bg-white hover:text-primary"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42"
+          />
+        </svg>
+        <span>{{ selectedTheme() }}</span>
+      </button>
+      <ul
+        tabindex="1"
+        class="dropdown-content menu bg-base-300 rounded-box z-50 w-36 p-2 shadow-sm text-black"
+      >
+        @for (theme of themes; track $index) {
+          <li (click)="setTheme(theme)">
+            <a>{{ theme }}</a>
+          </li>
+        }
+      </ul>
+    </div>
+    @if (accountService.currentUser(); as user) {
+      <div class="dropdown dropdown-end">
+        <div
+          tabindex="0"
+          role="button"
+          class="flex items-center text-white text-xl gap-3 cursor-pointer"
+        >
+          <img
+            [src]="user?.imageUrl || '/default-user.png'"
+            alt="Profile Picture"
+            class="w-10 h-10 rounded-full"
+          />
+          <span>{{ user.displayName }}</span>
+        </div>
+        <ul
+          tabindex="1"
+          class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm text-black"
+        >
+          <li>
+            <a routerLink="/members/{{ user?.id }}" routerLinkActive="text-primary">Edit Profile</a>
+          </li>
+          <li (click)="logout()"><a>Logout</a></li>
+        </ul>
+      </div>
+    } @else {
+      <form #loginForm="ngForm" class="flex items-center gap-2" (ngSubmit)="login()">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          autocomplete="email"
+          class="input input-sm w-40 text-base-content"
+          [(ngModel)]="creds.email"
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          autocomplete="current-password"
+          class="input input-sm w-32 text-base-content"
+          [(ngModel)]="creds.password"
+        />
+        <button
+          type="submit"
+          class="btn btn-sm border-white bg-transparent text-white hover:border-white hover:bg-white hover:text-primary"
+        >
+          Log in
+        </button>
+      </form>
+    }
+  </nav>
+</header>

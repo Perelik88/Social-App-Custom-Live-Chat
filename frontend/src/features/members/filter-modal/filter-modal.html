@@ -1,0 +1,72 @@
+<dialog #filterModal class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg">Filter members</h3>
+    <div class="py-4">
+      <div class="flex justify-between text-sm font-medium">
+        <label>Age range</label>
+        <span>{{ memberParams.minAge }} - {{ memberParams.maxAge }}</span>
+      </div>
+      <div class="age-range mt-3">
+        <div class="age-range__track"></div>
+        <div
+          class="age-range__selection"
+          [style.left.%]="agePosition(memberParams.minAge)"
+          [style.right.%]="100 - agePosition(memberParams.maxAge)"
+        ></div>
+        <input
+          class="age-range__input age-range__input--min"
+          [class.age-range__input--overlap]="memberParams.minAge === memberParams.maxAge"
+          type="range"
+          [min]="minimumAge"
+          [max]="maximumAge"
+          [value]="memberParams.minAge"
+          aria-label="Minimum age"
+          (input)="setMinAge($event)"
+          (change)="applyFilters()"
+        />
+        <input
+          class="age-range__input age-range__input--max"
+          [class.age-range__input--overlap]="memberParams.minAge === memberParams.maxAge"
+          type="range"
+          [min]="minimumAge"
+          [max]="maximumAge"
+          [value]="memberParams.maxAge"
+          aria-label="Maximum age"
+          (input)="setMaxAge($event)"
+          (change)="applyFilters()"
+        />
+      </div>
+      <div class="flex justify-between text-xs text-base-content/70">
+        <span>{{ minimumAge }}</span>
+        <span>{{ maximumAge }}</span>
+      </div>
+    </div>
+    <label class="form-control w-full">
+      <span class="label-text mb-2">Gender</span>
+      <select
+        class="select select-bordered w-full"
+        [value]="memberParams.gender ?? ''"
+        (change)="setGender($event)"
+      >
+        <option value="">Any</option>
+        <option value="female">Female</option>
+        <option value="male">Male</option>
+        <option value="other">Other</option>
+      </select>
+    </label>
+    <label class="form-control w-full mt-4">
+      <span class="label-text mb-2">Order by</span>
+      <select
+        class="select select-bordered w-full"
+        [value]="memberParams.orderBy"
+        (change)="setOrderBy($event)"
+      >
+        <option value="lastActive">Last Active</option>
+        <option value="created">Created</option>
+      </select>
+    </label>
+    <div class="modal-action">
+      <button type="button" (click)="close()" class="btn">Close</button>
+    </div>
+  </div>
+</dialog>

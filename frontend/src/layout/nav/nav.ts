@@ -1,0 +1,54 @@
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { inject, OnInit } from '@angular/core';
+import { BusyService } from '../../core/services/busy-service';
+import { AccountService } from '../../core/services/account-service';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { ToastService } from '../../core/services/toast-service';
+import { themes } from '../themes';
+
+@Component({
+  selector: 'app-nav',
+  imports: [FormsModule, RouterLink, RouterLinkActive],
+  templateUrl: './nav.html',
+  styleUrl: './nav.css',
+})
+export class Nav implements OnInit {
+  protected accountService = inject(AccountService);
+  protected busyService = inject(BusyService);
+  private router = inject(Router);
+  private toastService = inject(ToastService);
+  protected creds: { email: string; password: string } = { email: '', password: '' };
+  protected selectedTheme = signal<string>(localStorage.getItem('theme') || 'light');
+  protected themes = themes;
+
+  ngOnInit(): void {
+    document.documentElement.setAttribute('data-theme', this.selectedTheme());
+  }
+
+  setTheme(theme: string) {
+    this.selectedTheme.set(theme);
+    localStorage.setItem('theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    const elem = document.activeElement as HTMLDivElement;
+    if (elem) elem.blur();
+  }
+
+  login() {
+    this.accountService.login(this.creds).subscribe({
+      next: (result: any) => {
+        this.router.navigateByUrl('/members');
+        this.toastService.success('Login successful');
+        this.creds = { email: '', password: '' };
+      },
+      error: (err: any) => this.toastService.error(err.error)
+    });
+  }
+
+  logout() {
+    this.accountService.logout();
+    this.creds = { email: '', password: '' };
+    this.toastService.info('Logged out successfully');
+    this.router.navigateByUrl('/home');
+  }
+}

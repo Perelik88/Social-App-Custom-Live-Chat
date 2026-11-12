@@ -1,0 +1,25 @@
+      <label class="floating-label">
+        <span class="label">{{ label() }}</span>
+        <input
+          class="input w-full"
+          [class.input-error]="control.invalid && control.touched"
+          [class.input-success]="control.valid && control.touched"
+          [max]="maxDate()"
+          [type]="type()"
+          [placeholder]="label()"
+          required
+          [formControl]="control"
+        />
+        @if (control.hasError('required') && control.touched){
+          <div class="validation-hint text-error">{{ label() }} is required</div>
+        }
+        @if (control.hasError('minlength') && control.touched){
+          <div class="validation-hint text-error">{{ label() }} must be at least {{ control.errors?.['minlength']?.requiredLength }} characters</div>
+        }
+        @if (control.hasError('mismatch') && control.touched){
+          <div class="validation-hint text-error">{{ label() }} does not match</div>
+        }
+        @if (control.hasError('email') && control.touched){
+          <div class="validation-hint text-error">Invalid Email</div>
+        }
+      </label>

@@ -1,0 +1,40 @@
+@if (member(); as member) {
+  <div class="flex flex-col gap3">
+    <div class="flex gap-3">
+      <span class="font-semibold">Member since: </span>
+      <span>{{ member.created | date: 'd MMMM y' }}</span>
+    </div>
+    <div class="flex gap-3">
+      <span class="font-semibold">Last active: </span>
+      <span>{{ member.lastActive | timeAgo }}</span>
+    </div>
+    <h3 class="text-lg font-semibold text-primary pb-2 pt-2">About {{ member.displayName }}</h3>
+    @if (memberService.editMode()) {
+      <form #editForm="ngForm" (ngSubmit)="editProfile()" class="flex flex-col gap-4 w-full">
+          <label class="floating-label">
+            <span>Display Name: </span>
+            <input type="text" [(ngModel)]="memberEdit!.displayName" placeholder="Display Name" name="displayName" class="border rounded p-1 w-full" />
+          </label>
+          <label class="floating-label">
+            <span>Bio: </span>
+            <textarea [(ngModel)]="memberEdit!.bio" placeholder="Bio" name="bio" class="border rounded p-1 w-full"></textarea>
+          </label>
+          <label class="floating-label">
+            <span>City: </span>
+            <input type="text" [(ngModel)]="memberEdit!.city" placeholder="City" name="city" class="border rounded p-1 w-full" />
+          </label>
+          <label class="floating-label">
+            <span>Country: </span>
+            <input type="text" [(ngModel)]="memberEdit!.country" placeholder="Country" name="country" class="border rounded p-1 w-full" />
+          </label>
+          <div class="flex self-end">
+            <button type="submit" [disabled]="!editForm.dirty"  class="btn btn-primary rounded p-2 mt-3">Save</button>
+          </div>
+      </form>
+    } @else {
+      <div>
+        {{ member.bio }}
+      </div>
+    }
+  </div>
+}

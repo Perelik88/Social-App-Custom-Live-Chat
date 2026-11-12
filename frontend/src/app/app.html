@@ -1,0 +1,10 @@
+<app-nav />
+<div
+  /* Angular style guide , instead of NgClass */
+  [class.mt-24]="!router.url.includes('/home')"
+  [class.container]="!router.url.includes('/home')"
+  [class.mx-auto]="!router.url.includes('/home')"
+  /* [ngClass]="{ 'mt-24 container mx-auto': !router.url.includes('/home') }" */
+  >
+  <router-outlet></router-outlet>
+</div>
